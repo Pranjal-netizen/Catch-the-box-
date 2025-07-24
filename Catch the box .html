@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catch the Box!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #333;
+    }
+    #game-area {
+      position: relative;
+      width: 100%;
+      height: 80vh;
+      border: 2px solid #333;
+      overflow: hidden;
+      margin: 0 auto;
+      background: #e0f7fa;
+    }
+    #box {
+      width: 60px;
+      height: 60px;
+      background-color: red;
+      position: absolute;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    #score, #time {
+      font-size: 24px;
+      margin: 10px;
+    }
+    #start {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    #start:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Catch the Box!</h1>
+  <div id="score">Score: 0</div>
+  <div id="time">Time: 30</div>
+  <div id="game-area">
+    <div id="box"></div>
+  </div>
+  <button id="start">Start Game</button>
+
+  <script>
+    const box = document.getElementById("box");
+    const scoreDisplay = document.getElementById("score");
+    const timeDisplay = document.getElementById("time");
+    const startButton = document.getElementById("start");
+
+    let score = 0;
+    let timeLeft = 30;
+    let timer;
+    let gameRunning = false;
+
+    function randomPosition() {
+      const gameArea = document.getElementById("game-area");
+      const maxX = gameArea.clientWidth - box.clientWidth;
+      const maxY = gameArea.clientHeight - box.clientHeight;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+      box.style.left = x + "px";
+      box.style.top = y + "px";
+    }
+
+    function updateScore() {
+      score++;
+      scoreDisplay.textContent = "Score: " + score;
+      randomPosition();
+    }
+
+    function startGame() {
+      if (gameRunning) return;
+      gameRunning = true;
+      score = 0;
+      timeLeft = 30;
+      scoreDisplay.textContent = "Score: 0";
+      timeDisplay.textContent = "Time: 30";
+      box.style.display = "block";
+      randomPosition();
+
+      timer = setInterval(() => {
+        timeLeft--;
+        timeDisplay.textContent = "Time: " + timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          box.style.display = "none";
+          alert("⏰ Time's up! Your score: " + score);
+          gameRunning = false;
+        }
+      }, 1000);
+    }
+
+    box.addEventListener("click", updateScore);
+    startButton.addEventListener("click", startGame);
+  </script>
+</body>
+</html>
